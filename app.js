@@ -543,6 +543,31 @@ const App = (() => {
   async function fetchSimStockData(ticker) {
     ticker = (ticker || '').toUpperCase().trim();
     if (!ticker) return null;
+    
+    // Fallback 1: Try Vietstock via CORS Proxy (Priority 1)
+    try {
+      const vsUrl = `https://banggia.vietstock.vn/api/stock/getstockinfo?code=${ticker}`;
+      const vsCors = "https://api.allorigins.win/raw?url=" + encodeURIComponent(vsUrl);
+      const ctrl = new AbortController();
+      const tid = setTimeout(() => ctrl.abort(), 5000);
+      const r = await fetch(vsCors, { signal: ctrl.signal });
+      clearTimeout(tid);
+      if (r.ok) {
+        const j = await r.json();
+        const d = j?.data?.[0] || j?.data || j;
+        if (d) {
+          let price = d.c ?? d.p ?? d.lastPrice ?? d.close ?? d.MatchPrice ?? 0;
+          if (price > 0 && price < 1000) price *= 1000;
+          let prev = d.r ?? d.ref ?? d.re ?? d.referencePrice ?? d.prevClose ?? d.RefPrice ?? 0;
+          if (prev > 0 && prev < 1000) prev *= 1000;
+          if (price > 0) {
+            return { price, change: prev ? (price - prev) / prev * 100 : 0 };
+          }
+        }
+      }
+    } catch {}
+
+    // Fallback 2: Try TCBS via CORS Proxy (Priority 2)
     const url = `https://apipubaws.tcbs.com.vn/stock-insight/v1/stock/last-data?ticker=${ticker}&type=stock`;
     const parse = j => {
       const d = j?.data?.[0] || j?.data || j;
@@ -552,18 +577,6 @@ const App = (() => {
       const prev = d.re ?? d.referencePrice ?? d.ref ?? d.closePrice ?? d.prevClose ?? 0;
       return { price, change: prev ? (price - prev) / prev * 100 : 0 };
     };
-    // Try Vercel proxy first
-    try {
-      const ctrl = new AbortController();
-      const tid = setTimeout(() => ctrl.abort(), 6000);
-      const r = await fetch(`/api/price?ticker=${ticker}`, { signal: ctrl.signal });
-      clearTimeout(tid);
-      if (r.ok) {
-        const j = await r.json();
-        if (j?.price) return { price: j.price, change: j.prevClose ? (j.price - j.prevClose) / j.prevClose * 100 : 0 };
-      }
-    } catch {}
-    // Fallback 1: TCBS API via Allorigins CORS Proxy (for local/offline)
     try {
       const corsUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
       const ctrl = new AbortController();
@@ -572,7 +585,8 @@ const App = (() => {
       clearTimeout(tid);
       if (r.ok) { const d = parse(await r.json()); if (d) return d; }
     } catch {}
-    // Fallback 2: direct TCBS
+    
+    // Fallback 3: direct TCBS
     try {
       const ctrl = new AbortController();
       const tid = setTimeout(() => ctrl.abort(), 5000);
@@ -580,6 +594,7 @@ const App = (() => {
       clearTimeout(tid);
       if (r.ok) { const d = parse(await r.json()); if (d) return d; }
     } catch {}
+    
     const seed = SIM_PRICE_SEEDS[ticker];
     if (seed) return { price: seed, change: 0, demo: true };
     return null;
@@ -2112,6 +2127,30 @@ const VN100 = (() => {
   }
 
   async function yahooFetch(ticker) {
+    // Fallback 1: Try Vietstock via CORS Proxy (Priority 1)
+    try {
+      const vsUrl = `https://banggia.vietstock.vn/api/stock/getstockinfo?code=${ticker}`;
+      const vsCors = "https://api.allorigins.win/raw?url=" + encodeURIComponent(vsUrl);
+      const ctrl = new AbortController();
+      const tid = setTimeout(() => ctrl.abort(), 5000);
+      const r = await fetch(vsCors, { signal: ctrl.signal });
+      clearTimeout(tid);
+      if (r.ok) {
+        const j = await r.json();
+        const d = j?.data?.[0] || j?.data || j;
+        if (d) {
+          let price = d.c ?? d.p ?? d.lastPrice ?? d.close ?? d.MatchPrice ?? 0;
+          if (price > 0 && price < 1000) price *= 1000;
+          let prev = d.r ?? d.ref ?? d.re ?? d.referencePrice ?? d.prevClose ?? d.RefPrice ?? price;
+          if (prev > 0 && prev < 1000) prev *= 1000;
+          if (price > 0) {
+            return { price, prevClose: prev };
+          }
+        }
+      }
+    } catch {}
+
+    // Fallback 2: Try Vercel proxy
     try {
       const ctrl = new AbortController();
       const tid = setTimeout(() => ctrl.abort(), 6000);
@@ -2122,7 +2161,8 @@ const VN100 = (() => {
         if (j?.price) return j;
       }
     } catch {}
-    // Fallback: TCBS API via Allorigins CORS Proxy (for local/offline)
+
+    // Fallback 3: TCBS API via Allorigins CORS Proxy (for local/offline)
     try {
       const url = `https://apipubaws.tcbs.com.vn/stock-insight/v1/stock/last-data?ticker=${ticker}&type=stock`;
       const corsUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
