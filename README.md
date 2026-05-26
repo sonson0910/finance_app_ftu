@@ -1,6 +1,6 @@
 # Finera — Nền Tảng Quản Lý Tài Chính Doanh Nghiệp & Cố Vấn Đầu Tư Cao Cấp
 
-**Finera (Business Finance Platform)** là một ứng dụng quản lý tài chính doanh nghiệp và cố vấn phân bổ tài sản dài hạn toàn diện với giao diện **Dark Fintech** hiện đại, mượt mà và trực quan. 
+**Finera (Business Finance Platform)** là một ứng dụng quản lý tài chính doanh nghiệp và cố vấn phân bổ tài sản dài hạn toàn diện với giao diện **Aurora Indigo & Rose Gold Glassmorphism** (Cực quang Tím Chàm & Vàng Hồng Kính Mờ) — xu hướng thiết kế Fintech thời thượng, lộng lẫy và cao cấp nhất.
 
 Ứng dụng kết hợp hai công cụ cốt lõi: hệ thống theo dõi dòng tiền vận hành nghiệp vụ thời gian thực của doanh nghiệp và trình mô phỏng tăng trưởng tài sản 30 năm dựa trên lãi kép để đưa ra gợi ý tái cân bằng tự động theo Benchmark tiêu chuẩn quốc tế.
 
@@ -47,7 +47,7 @@
 ## 🛠️ Công Nghệ Sử Dụng
 
 1. **Khung giao diện (Frontend Core)**: HTML5 & Vanilla Javascript (Không React/Angular/Vue giúp ứng dụng cực kỳ nhẹ, tối ưu hóa tốc độ tải trang).
-2. **Làm đẹp giao diện (Styles)**: Vanilla CSS (Thiết kế hiệu ứng kính mờ glassmorphism, Dark Theme Fintech cao cấp, Bento Grid).
+2. **Làm đẹp giao diện (Styles)**: Vanilla CSS (Hệ thiết kế Aurora Indigo & Rose Gold Glassmorphism thời thượng, hiệu ứng kính mờ Frosted Glassmorphism lộng lẫy, màu sắc cực quang động, Bento Grid và bình thủy tinh Rose Gold Jars tinh xảo).
 3. **Thư viện vẽ biểu đồ**: [Chart.js (v4.4.0) CDN](https://www.chartjs.org/)
 4. **Xử lý tệp tin Excel**: [SheetJS (xlsx) CDN](https://sheetjs.com/)
 5. **Dịch Vụ Cloud & Xác thực**: [Google Identity Services Client API](https://developers.google.com/identity/gsi/web)

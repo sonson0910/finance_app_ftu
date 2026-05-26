@@ -11,9 +11,9 @@ const Charts = (() => {
   };
 
   const C = {
-    orange: '#f05a28', blue: '#1e90ff', teal: '#00d4aa', red: '#ff4757',
-    purple: '#a855f7', yellow: '#fbbf24', muted: '#7a9ab5',
-    grid: 'rgba(255,255,255,0.05)', tooltip: '#0d1e2e',
+    orange: '#ec4899', blue: '#6366f1', teal: '#10b981', red: '#f43f5e',
+    purple: '#a855f7', yellow: '#f59e0b', muted: 'rgba(243,244,246,0.65)',
+    grid: 'rgba(255,255,255,0.04)', tooltip: '#0b091c',
   };
 
   const CAT_COLORS = {
@@ -117,8 +117,8 @@ const Charts = (() => {
       data: {
         labels,
         datasets: [
-          { label: 'Revenue (Thu nhập)',   data: incomeData,  borderColor: '#22c55e', backgroundColor: grad(ctx, 'rgba(34,197,94,0.1)', 'rgba(34,197,94,0)'), fill: true, tension: 0.4, pointBackgroundColor: '#22c55e', pointBorderColor: '#22c55e', pointRadius: 4, pointHoverRadius: 7, borderWidth: 2 },
-          { label: 'Expenses (Chi phí)', data: expenseData, borderColor: C.orange, backgroundColor: grad(ctx, 'rgba(240,90,40,0.22)', 'rgba(240,90,40,0)'), fill: true, tension: 0.4, pointBackgroundColor: C.orange, pointRadius: 4, pointHoverRadius: 7, borderWidth: 2 },
+          { label: 'Revenue (Thu nhập)',   data: incomeData,  borderColor: C.teal, backgroundColor: grad(ctx, 'rgba(16,185,129,0.15)', 'rgba(16,185,129,0)'), fill: true, tension: 0.4, pointBackgroundColor: C.teal, pointBorderColor: C.teal, pointRadius: 4, pointHoverRadius: 7, borderWidth: 2 },
+          { label: 'Expenses (Chi phí)', data: expenseData, borderColor: C.red, backgroundColor: grad(ctx, 'rgba(244,63,94,0.18)', 'rgba(244,63,94,0)'), fill: true, tension: 0.4, pointBackgroundColor: C.red, pointRadius: 4, pointHoverRadius: 7, borderWidth: 2 },
         ],
       },
       options: baseOpts(),
@@ -212,7 +212,7 @@ const Charts = (() => {
     const ctx = canvas.getContext('2d');
     make(id, {
       type: 'line',
-      data: { labels, datasets: [{ label: 'Cumulative Balance (Số dư tích lũy)', data, borderColor: C.teal, backgroundColor: grad(ctx, 'rgba(0,212,170,0.35)', 'rgba(0,212,170,0)'), fill: true, tension: 0.4, pointBackgroundColor: C.teal, pointRadius: 4, pointHoverRadius: 7, borderWidth: 2 }] },
+      data: { labels, datasets: [{ label: 'Cumulative Balance (Số dư tích lũy)', data, borderColor: C.teal, backgroundColor: grad(ctx, 'rgba(16,185,129,0.22)', 'rgba(16,185,129,0)'), fill: true, tension: 0.4, pointBackgroundColor: C.teal, pointRadius: 4, pointHoverRadius: 7, borderWidth: 2 }] },
       options: baseOpts(),
     });
   }
@@ -288,8 +288,8 @@ const Charts = (() => {
       data: {
         labels,
         datasets: [
-          { label: 'Investment Gains (Lợi nhuận gộp)',     data: gains,       borderColor: C.orange, backgroundColor: grad(ctx, 'rgba(240,90,40,0.45)',   'rgba(240,90,40,0.05)'),   fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2, stack: 'portfolio' },
-          { label: 'Contributed Capital (Vốn gốc tích lũy)',  data: contributed, borderColor: C.blue,   backgroundColor: grad(ctx, 'rgba(30,144,255,0.45)', 'rgba(30,144,255,0.05)'), fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2, stack: 'portfolio' },
+          { label: 'Investment Gains (Lợi nhuận gộp)',     data: gains,       borderColor: C.red, backgroundColor: grad(ctx, 'rgba(244,63,94,0.35)',   'rgba(244,63,94,0.02)'),   fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2, stack: 'portfolio' },
+          { label: 'Contributed Capital (Vốn gốc tích lũy)',  data: contributed, borderColor: C.blue,   backgroundColor: grad(ctx, 'rgba(99,102,241,0.35)', 'rgba(99,102,241,0.02)'), fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2, stack: 'portfolio' },
         ],
       },
       options: opts,
@@ -316,8 +316,8 @@ const Charts = (() => {
       data: {
         labels,
         datasets: [
-          { label: 'Gains (Lợi nhuận)',      data: gains,       borderColor: C.orange, backgroundColor: grad(ctx, 'rgba(240,90,40,0.40)',   'rgba(240,90,40,0.04)'),   fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2, stack: 'sim' },
-          { label: 'Capital (Vốn gốc)',    data: contributed, borderColor: '#f5f0e0', backgroundColor: grad(ctx, 'rgba(245,240,224,0.40)', 'rgba(245,240,224,0.04)'), fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2, stack: 'sim' },
+          { label: 'Gains (Lợi nhuận)',      data: gains,       borderColor: C.red, backgroundColor: grad(ctx, 'rgba(244,63,94,0.35)',   'rgba(244,63,94,0.02)'),   fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2, stack: 'sim' },
+          { label: 'Capital (Vốn gốc)',    data: contributed, borderColor: C.blue, backgroundColor: grad(ctx, 'rgba(99,102,241,0.35)', 'rgba(99,102,241,0.02)'), fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2, stack: 'sim' },
         ],
       },
       options: opts,
@@ -325,7 +325,7 @@ const Charts = (() => {
   }
 
   function simStockMilestone(id, milestoneLabels, stocksData) {
-    const PALETTE = ['#1e90ff', '#00d4aa', '#a855f7', '#fbbf24', '#f472b6'];
+    const PALETTE = ['#6366f1', '#10b981', '#8b5cf6', '#fda4af', '#f59e0b'];
     const datasets = stocksData.map((s, i) => ({
       label: s.label,
       data:  s.data,
