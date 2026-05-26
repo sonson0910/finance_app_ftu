@@ -1,6 +1,6 @@
-# Finera — Nền Tảng Quản Lý Tài Chính Doanh Nghiệp & Cố Vấn Đầu Tư Cao Cấp
+# Whyme's Finance — Nền Tảng Quản Lý Tài Chính Doanh Nghiệp & Cố Vấn Đầu Tư Cao Cấp
 
-**Finera (Business Finance Platform)** là một ứng dụng quản lý tài chính doanh nghiệp và cố vấn phân bổ tài sản dài hạn toàn diện với giao diện **Aurora Indigo & Rose Gold Glassmorphism** (Cực quang Tím Chàm & Vàng Hồng Kính Mờ) — xu hướng thiết kế Fintech thời thượng, lộng lẫy và cao cấp nhất.
+**Whyme's Finance (Business Finance Platform)** là một ứng dụng quản lý tài chính doanh nghiệp và cố vấn phân bổ tài sản dài hạn toàn diện với giao diện **Aurora Indigo & Rose Gold Glassmorphism** (Cực quang Tím Chàm & Vàng Hồng Kính Mờ) — xu hướng thiết kế Fintech thời thượng, lộng lẫy và cao cấp nhất.
 
 Ứng dụng kết hợp hai công cụ cốt lõi: hệ thống theo dõi dòng tiền vận hành nghiệp vụ thời gian thực của doanh nghiệp và trình mô phỏng tăng trưởng tài sản 30 năm dựa trên lãi kép để đưa ra gợi ý tái cân bằng tự động theo Benchmark tiêu chuẩn quốc tế.
 
