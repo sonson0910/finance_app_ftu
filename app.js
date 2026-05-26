@@ -12,9 +12,106 @@ const App = (() => {
     cfFilter:        { month: _cm },
     simFilter:       { month: _cm },
     allocFilter:     { month: _cm },
+    lang:            'en',
   };
 
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  const TRANSLATIONS = {
+    en: {
+      "nav-dashboard": "Home",
+      "nav-income": "Income",
+      "nav-expenses": "Expenses",
+      "nav-cashflow": "Cash Flow",
+      "nav-simulator": "Simulator",
+      "nav-allocation": "Allocation",
+      "nav-settings": "Settings",
+      "title-dashboard": "Dashboard",
+      "title-income": "Income",
+      "title-expenses": "Expenses",
+      "title-cashflow": "Cash Flow",
+      "title-simulator": "Investment Simulator",
+      "title-allocation": "Asset Allocation Advisor",
+      "title-settings": "Settings",
+      "sub-dashboard": "Your business financial overview at a glance",
+      "sub-income": "Track all revenue sources",
+      "sub-expenses": "Monitor your operating costs",
+      "sub-cashflow": "Net revenue after all operating costs",
+      "sub-simulator": "Simulate 30-year asset growth across 5 stock positions",
+      "sub-allocation": "Compare your allocation against the standard benchmark",
+      "sub-settings": "Customize your Whyme's Finance experience",
+    },
+    vi: {
+      "nav-dashboard": "Tổng quan",
+      "nav-income": "Thu nhập",
+      "nav-expenses": "Chi phí",
+      "nav-cashflow": "Dòng tiền",
+      "nav-simulator": "Mô phỏng",
+      "nav-allocation": "Phân bổ",
+      "nav-settings": "Cài đặt",
+      "title-dashboard": "Bảng tổng quan",
+      "title-income": "Quản lý Thu nhập",
+      "title-expenses": "Quản lý Chi phí",
+      "title-cashflow": "Phân tích Dòng tiền",
+      "title-simulator": "Mô phỏng Tích lũy 30 Năm",
+      "title-allocation": "Cố vấn Phân bổ Tài sản",
+      "title-settings": "Cài đặt hệ thống",
+      "sub-dashboard": "Toàn cảnh bức tranh tài chính vận hành doanh nghiệp",
+      "sub-income": "Theo dõi chi tiết tất cả các nguồn doanh thu",
+      "sub-expenses": "Kiểm soát chặt chẽ các khoản chi phí vận hành",
+      "sub-cashflow": "Dòng tiền ròng thặng dư sau tất cả các chi phí",
+      "sub-simulator": "Mô phỏng tăng trưởng tài sản 30 năm dựa trên lãi kép",
+      "sub-allocation": "So sánh danh mục thực tế của bạn với Benchmark chuẩn",
+      "sub-settings": "Cá nhân hóa cấu hình Whyme's Finance của bạn",
+    },
+    zh: {
+      "nav-dashboard": "首页",
+      "nav-income": "收入管理",
+      "nav-expenses": "支出管理",
+      "nav-cashflow": "现金流分析",
+      "nav-simulator": "30年复利模拟器",
+      "nav-allocation": "资产配置顾问",
+      "nav-settings": "系统设置",
+      "title-dashboard": "财务仪表盘",
+      "title-income": "收入管理",
+      "title-expenses": "支出管理",
+      "title-cashflow": "现金流分析",
+      "title-simulator": "30年投资复利模拟器",
+      "title-allocation": "资产配置顾问",
+      "title-settings": "系统设置",
+      "sub-dashboard": "一目了然地查看您的企业财务概况",
+      "sub-income": "跟踪所有收入来源",
+      "sub-expenses": "监控您的运营成本",
+      "sub-cashflow": "扣除所有运营成本后的净收入",
+      "sub-simulator": "模拟5个股票头寸在30年内的资产增长",
+      "sub-allocation": "将您的资产配置与标准基准进行比较",
+      "sub-settings": "自定义您的 Whyme's Finance 体验",
+    }
+  };
+
+  function applyLanguage(lang) {
+    state.lang = lang || 'en';
+    localStorage.setItem('whyme_lang', state.lang);
+    
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      const text = TRANSLATIONS[state.lang]?.[key];
+      if (text) el.textContent = text;
+    });
+
+    const dict = TRANSLATIONS[state.lang];
+    document.querySelectorAll('.section').forEach(sec => {
+      const id = sec.id;
+      const titleEl = sec.querySelector('.section-title');
+      const subEl   = sec.querySelector('.section-subtitle');
+      if (titleEl && dict[`title-${id}`]) titleEl.textContent = dict[`title-${id}`];
+      if (subEl   && dict[`sub-${id}`])   subEl.textContent   = dict[`sub-${id}`];
+    });
+
+    const select = document.getElementById('langSelect');
+    if (select) select.value = state.lang;
+  }
+
 
   // ─── Cloud Sync (Google Sheets) ──────────────────────────────────────────────
   const SHEET_API = 'https://script.google.com/macros/s/AKfycbwBTvvKkK6KjMfUn9zaleLWOhtErbvB7kcV23gsLzVtAb1CvzBovIIOjtuDzhL9HQWPBQ/exec';
@@ -1793,6 +1890,9 @@ const App = (() => {
     Charts.setCurrency(state.settings.currency || '₫');
     loadCustomColors();
 
+    const savedLang = localStorage.getItem('whyme_lang') || 'en';
+    applyLanguage(savedLang);
+
     const dateEl = document.getElementById('topbarDate');
     if (dateEl) dateEl.textContent = new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
 
@@ -1806,6 +1906,10 @@ const App = (() => {
 
     window.addEventListener('hashchange', () => navigate(window.location.hash));
     window.addEventListener('resize', alignRateBoxes);
+
+    document.getElementById('langSelect')?.addEventListener('change', e => {
+      applyLanguage(e.target.value);
+    });
 
     document.getElementById('txForm').addEventListener('submit', saveTransaction);
 

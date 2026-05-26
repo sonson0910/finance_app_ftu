@@ -20,7 +20,7 @@
   <!-- ── Info Bar ─────────────────────────────────────────────────────────── -->
   <div class="info-bar">
     <span>TCHE321 (2526-2)GD2.02 &nbsp;·&nbsp; Instructor: Dinh Thanh Huong</span>
-    <span>Group 01</span>
+    <span>Group 09</span>
   </div>
 
   <!-- ── Topbar ──────────────────────────────────────────────────────────── -->
@@ -50,15 +50,20 @@
         WHYME'S FINANCE
       </a>
       <nav class="main-nav" id="mainNav">
-        <button class="nav-link active" data-section="dashboard">Home</button>
-        <button class="nav-link" data-section="income">Income</button>
-        <button class="nav-link" data-section="expenses">Expenses</button>
-        <button class="nav-link" data-section="cashflow">Cash Flow</button>
-        <button class="nav-link" data-section="simulator">Simulator</button>
-        <button class="nav-link" data-section="allocation">Allocation</button>
-        <button class="nav-link" data-section="settings">Settings</button>
+        <button class="nav-link active" data-section="dashboard" data-i18n="nav-dashboard">Home</button>
+        <button class="nav-link" data-section="income" data-i18n="nav-income">Income</button>
+        <button class="nav-link" data-section="expenses" data-i18n="nav-expenses">Expenses</button>
+        <button class="nav-link" data-section="cashflow" data-i18n="nav-cashflow">Cash Flow</button>
+        <button class="nav-link" data-section="simulator" data-i18n="nav-simulator">Simulator</button>
+        <button class="nav-link" data-section="allocation" data-i18n="nav-allocation">Allocation</button>
+        <button class="nav-link" data-section="settings" data-i18n="nav-settings">Settings</button>
       </nav>
       <div class="topbar-actions">
+        <select class="lang-select" id="langSelect">
+          <option value="en">English</option>
+          <option value="vi">Tiếng Việt</option>
+          <option value="zh">中文</option>
+        </select>
         <span class="topbar-date" id="topbarDate"></span>
         <div class="topbar-auth" id="topbarAuth">
           <div id="googleSignInBtn"></div>
