@@ -545,11 +545,11 @@ const App = (() => {
     if (!ticker) return null;
     const url = `https://apipubaws.tcbs.com.vn/stock-insight/v1/stock/last-data?ticker=${ticker}&type=stock`;
     const parse = j => {
-      const d = j?.data;
+      const d = j?.data?.[0] || j?.data || j;
       if (!d) return null;
-      const price = d.lastPrice ?? d.p ?? d.last ?? d.close ?? 0;
-      if (!price) return null;
-      const prev = d.referencePrice ?? d.ref ?? d.closePrice ?? d.prevClose ?? 0;
+      let price = d.p ?? d.lastPrice ?? d.last ?? d.close ?? 0;
+      if (price > 0 && price < 1000) price *= 1000;
+      const prev = d.re ?? d.referencePrice ?? d.ref ?? d.closePrice ?? d.prevClose ?? 0;
       return { price, change: prev ? (price - prev) / prev * 100 : 0 };
     };
     // Try Vercel proxy first
@@ -563,7 +563,16 @@ const App = (() => {
         if (j?.price) return { price: j.price, change: j.prevClose ? (j.price - j.prevClose) / j.prevClose * 100 : 0 };
       }
     } catch {}
-    // Fallback: direct TCBS
+    // Fallback 1: TCBS API via Allorigins CORS Proxy (for local/offline)
+    try {
+      const corsUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
+      const ctrl = new AbortController();
+      const tid = setTimeout(() => ctrl.abort(), 6000);
+      const r = await fetch(corsUrl, { signal: ctrl.signal });
+      clearTimeout(tid);
+      if (r.ok) { const d = parse(await r.json()); if (d) return d; }
+    } catch {}
+    // Fallback 2: direct TCBS
     try {
       const ctrl = new AbortController();
       const tid = setTimeout(() => ctrl.abort(), 5000);
@@ -2111,6 +2120,25 @@ const VN100 = (() => {
       if (r.ok) {
         const j = await r.json();
         if (j?.price) return j;
+      }
+    } catch {}
+    // Fallback: TCBS API via Allorigins CORS Proxy (for local/offline)
+    try {
+      const url = `https://apipubaws.tcbs.com.vn/stock-insight/v1/stock/last-data?ticker=${ticker}&type=stock`;
+      const corsUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
+      const ctrl = new AbortController();
+      const tid = setTimeout(() => ctrl.abort(), 6000);
+      const r = await fetch(corsUrl, { signal: ctrl.signal });
+      clearTimeout(tid);
+      if (r.ok) {
+        const j = await r.json();
+        const d = j?.data?.[0] || j?.data || j;
+        if (d) {
+          let price = d.p ?? d.lastPrice ?? d.close ?? 0;
+          if (price > 0 && price < 1000) price *= 1000;
+          const prev = d.re ?? d.referencePrice ?? d.prevClose ?? price;
+          return { price, prevClose: prev };
+        }
       }
     } catch {}
     return null;
