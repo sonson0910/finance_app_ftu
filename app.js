@@ -547,7 +547,7 @@ const App = (() => {
     // Fallback 1: Try Vietstock via CORS Proxy (Priority 1)
     try {
       const vsUrl = `https://banggia.vietstock.vn/api/stock/getstockinfo?code=${ticker}`;
-      const vsCors = "https://api.allorigins.win/raw?url=" + encodeURIComponent(vsUrl);
+      const vsCors = "https://corsproxy.io/?" + encodeURIComponent(vsUrl);
       const ctrl = new AbortController();
       const tid = setTimeout(() => ctrl.abort(), 5000);
       const r = await fetch(vsCors, { signal: ctrl.signal });
@@ -578,7 +578,7 @@ const App = (() => {
       return { price, change: prev ? (price - prev) / prev * 100 : 0 };
     };
     try {
-      const corsUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
+      const corsUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
       const ctrl = new AbortController();
       const tid = setTimeout(() => ctrl.abort(), 6000);
       const r = await fetch(corsUrl, { signal: ctrl.signal });
@@ -605,13 +605,10 @@ const App = (() => {
     if (!el) return;
     if (!data) { el.innerHTML = '<span class="sim-live-val" style="color:var(--muted)">—</span>'; return; }
     const priceStr = new Intl.NumberFormat('vi-VN').format(Math.round(data.price));
-    if (data.demo) {
-      el.innerHTML = `<span class="sim-live-val">${priceStr}</span><span class="sim-live-chg" style="color:var(--muted);font-style:italic">demo</span>`;
-      return;
-    }
     const isUp = data.change >= 0;
+    const change = data.change || 0;
     el.innerHTML = `<span class="sim-live-val">${priceStr}</span>
-      <span class="sim-live-chg ${isUp ? 'up' : 'dn'}">${isUp ? '▲' : '▼'} ${Math.abs(data.change).toFixed(2)}%</span>`;
+      <span class="sim-live-chg ${isUp ? 'up' : 'dn'}">${isUp ? '▲' : '▼'} ${Math.abs(change).toFixed(2)}%</span>`;
   }
 
   async function refreshSimPrices() {
@@ -2130,7 +2127,7 @@ const VN100 = (() => {
     // Fallback 1: Try Vietstock via CORS Proxy (Priority 1)
     try {
       const vsUrl = `https://banggia.vietstock.vn/api/stock/getstockinfo?code=${ticker}`;
-      const vsCors = "https://api.allorigins.win/raw?url=" + encodeURIComponent(vsUrl);
+      const vsCors = "https://corsproxy.io/?" + encodeURIComponent(vsUrl);
       const ctrl = new AbortController();
       const tid = setTimeout(() => ctrl.abort(), 5000);
       const r = await fetch(vsCors, { signal: ctrl.signal });
@@ -2162,13 +2159,27 @@ const VN100 = (() => {
       }
     } catch {}
 
-    // Fallback 3: TCBS API via Allorigins CORS Proxy (for local/offline)
+    // Fallback 3: TCBS API via CORS Proxy (for local/offline)
     try {
       const url = `https://apipubaws.tcbs.com.vn/stock-insight/v1/stock/last-data?ticker=${ticker}&type=stock`;
-      const corsUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
+      const corsUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
       const ctrl = new AbortController();
       const tid = setTimeout(() => ctrl.abort(), 6000);
       const r = await fetch(corsUrl, { signal: ctrl.signal });
+      clearTimeout(tid);
+      if (r.ok) {
+        const j = await r.json();
+        const d = j?.data?.[0] || j?.data || j;
+        if (d) {
+          let price = d.p ?? d.lastPrice ?? d.close ?? 0;
+          if (price > 0 && price < 1000) price *= 1000;
+          const prev = d.re ?? d.referencePrice ?? d.prevClose ?? price;
+          return { price, prevClose: prev };
+        }
+      }
+    } catch {}
+    return null;
+  }
       clearTimeout(tid);
       if (r.ok) {
         const j = await r.json();
